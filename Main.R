@@ -3,7 +3,14 @@ library(caret)
 library(utils)
 library(randomForest)
 
-data <- read.csv('musicDataList.csv')
+file_path1 <- 'musicDataList2.csv'
+file_path2 <- 'musicDataList.csv'
+
+if (file.exists(file_path1))
+  data <- read.csv(file_path1)
+else
+  data <- read.csv(file_path2)
+
 data[data == ""] <- NA
 
 # this is the actual music data
@@ -102,6 +109,9 @@ for (i in 1:nrow(musicData)) {
 
 #refresh the data stated
 musicData <- musicData
+
+# oh btw the refreshed data should be added after the raw data is going to be added
+write.csv(musicData, file = "musicDataList2.csv")
 
 # region | Significance
 shapiro.test(musicData$Valence)
