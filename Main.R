@@ -8,6 +8,7 @@ fileRead <- function() {
     data <- na.omit(data)
     musicData <- data
     musicData$Emotion <- character(nrow(musicData))
+    
     # the enlisting of the data goes here
     for (i in 1:nrow(musicData)) 
     {
@@ -119,12 +120,12 @@ fileRead <- function() {
     # Create a boxplot to visualize the distributions
     boxplot(Valence ~ Emotion, data = musicData, main = "Valence by Emotion")
     
-    wilcoxon_test_result <- wilcox.test(musicData$Valence, musicData$Energetic)
-    print(wilcoxon_test_result)
+    # Calculate Spearman rank correlation coefficients
+    spearman_corr_energetic <- cor(musicData$Energetic, musicData$Valence, method = "spearman")
+    spearman_corr_valence <- cor(musicData$Valence, musicData$Energetic, method = "spearman")
     
-    # Wilcoxon rank-sum test for Energetic
-    energetic_test <- pairwise.wilcox.test(musicData$Energetic, musicData$Emotion, p.adjust.method = "BH")
-    print(energetic_test)
+    cat("Spearman rank correlation coefficient (Energetic, Valence):", spearman_corr_energetic, "\n")
+    cat("Spearman rank correlation coefficient (Valence, Energetic):", spearman_corr_valence)
     
     # scatter plot with regression line
     ggplot(musicData, aes(x = Energetic, y = Valence)) +
@@ -138,7 +139,7 @@ fileRead <- function() {
     predictors <- setdiff(names(musicData), "Emotion")
     
     # Split the data into training and testing sets
-    set.seed(42)
+    set.seed(3)
     train_indices <- createDataPartition(targetColumn, p = 0.8, list = FALSE)
     train_data <- musicData[train_indices, ]
     test_data <- musicData[-train_indices, ]
@@ -152,8 +153,6 @@ fileRead <- function() {
     # Evaluate the model
     accuracy <- confusionMatrix(predictions, test_data[, "Emotion"])$overall["Accuracy"]
     cat("Model Accuracy:", accuracy * 100, "%\n")
-    
-    #we need the data to be at least 95% in testing tbh....
 }
 
 fileRead()
