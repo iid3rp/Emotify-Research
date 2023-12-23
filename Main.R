@@ -98,12 +98,21 @@ fileRead <- function() {
                 musicData$Emotion[i] <- "Sluggish"
         }
     }
-
+    
+    #anova
     anova_result <- aov(musicData$Valence ~ Listener, data = data)
     summary(anova_result)
-    
+    #anova
     anova_result <- aov(musicData$Energetic ~ Listener, data = data)
     summary(anova_result)
+    
+    #table
+    table(musicData$Emotion)
+    
+    #table
+    table(musicData$Listener)
+    
+    table(musicData$Genre)
     
     # Descriptive statistics by Listener
     aggregate(Energetic ~ Listener, data = musicData, summary)
@@ -152,7 +161,7 @@ fileRead <- function() {
     
     # Evaluate the model
     accuracy <- confusionMatrix(predictions, test_data[, "Emotion"])$overall["Accuracy"]
-    cat("Model Accuracy:", accuracy * 100, "%\n")
+    cat("\nModel Accuracy:", accuracy * 100, "%\n")
 }
 
 fileRead()
